@@ -2,6 +2,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.AfterMethod;
 import pages.HomePage;
 import org.testng.ITestResult;
@@ -35,14 +36,23 @@ public class CategoryNavigationTest {
     driver.quit();
     }
 
-    @Test
-    public void fictionCategoryLoads() {
-        HomePage home = new HomePage(driver);
-        home.open();
-        home.clickFictionCategory();
-        Assert.assertTrue(driver.getTitle().contains("Fiction"),
-                "FAIL: expected Fiction page, got " + driver.getTitle());
-        Assert.assertEquals(home.getCategoryResultCount(), "65",
-                "FAIL: wrong result count on Fiction page");
+    @DataProvider(name = "categories")
+    public Object[][] categoryData() {
+    return new Object[][] {
+        { "Fiction", "65" },   // each row: category name, expected count
+        { "Poetry", "19" },
+        { "Travel", "11" }
+    };
+    }
+
+    @Test(dataProvider = "categories")
+    public void categoryLoadsAndCountMatches(String category, String expectedCount) {
+    HomePage home = new HomePage(driver);
+    home.open();
+    home.clickCategory(category);
+    Assert.assertTrue(driver.getTitle().contains(category),
+            "FAIL: expected " + category + " page, got " + driver.getTitle());
+    Assert.assertEquals(home.getCategoryResultCount(), expectedCount,
+            "FAIL: wrong result count on " + category + " page");
     }
 }
