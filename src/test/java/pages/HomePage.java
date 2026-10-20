@@ -1,5 +1,8 @@
 package pages; // a folder that groups page classes
 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -13,7 +16,15 @@ public class HomePage {
     }
 
     public void open() {
-        driver.get("https://books.toscrape.com/");
+    try {
+        Properties props = new Properties();
+        props.load(new FileInputStream("config.properties"));
+        driver.get(props.getProperty("baseUrl"));
+    } catch (Exception e) {
+        throw new RuntimeException(
+            "Could not read config.properties, working dir = " + System.getProperty("user.dir"),
+            e);
+    }
     }
 
     public void clickCategory(String categoryName) {
