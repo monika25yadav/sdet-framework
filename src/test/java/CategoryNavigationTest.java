@@ -1,4 +1,8 @@
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.OutputType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
@@ -6,9 +10,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.AfterMethod;
 import pages.HomePage;
 import org.testng.ITestResult;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.OutputType;
 import java.nio.file.Files;
 import java.io.File;
 
@@ -17,7 +18,11 @@ public class CategoryNavigationTest {
 
     @BeforeMethod
     public void setUp() {
-        driver = new ChromeDriver();
+    ChromeOptions options = new ChromeOptions();
+    if (System.getenv("CI") != null) {        // only on the CI server
+        options.addArguments("--headless=new");
+    }
+    driver = new ChromeDriver(options);
     }
 
     @AfterMethod
