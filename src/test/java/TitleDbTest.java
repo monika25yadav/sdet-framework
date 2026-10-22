@@ -46,6 +46,8 @@ public class TitleDbTest {
                 Assert.assertTrue(rs.next(), "FAIL: no title found for ISBN " + isbn);
                 Assert.assertEquals(rs.getString("title_name"), expectedTitle,
                         "FAIL: wrong title for ISBN " + isbn);
+                Assert.assertFalse(rs.next(),
+                        "Duplicate records found for ISBN " + isbn);
 
             }
         } catch (Exception e) {
